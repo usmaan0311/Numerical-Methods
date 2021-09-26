@@ -1,0 +1,47 @@
+import pandas as pd, matplotlib.pyplot as plt, glob, numpy as np
+
+f=glob.glob("*.dat")
+dfi=pd.read_csv(f[0],sep="\s+")
+dfs=pd.read_csv(f[1],sep="\s+")
+
+xi,yi,Ti=dfi.iloc[:,0],dfi.iloc[:,1], dfi.iloc[:,2]
+xs,ys,Ts=dfs.iloc[:,0],dfs.iloc[:,1], dfs.iloc[:,2]
+
+#print(f"xi size : {xi.size} ys size : {yi.size} Ti size {Ti.size}")
+xi,yi=xi.unique(),yi.unique()
+if(Ti.size==xi.size*yi.size):
+	Ti=Ti.values.reshape(xi.size,yi.size).T
+
+else:
+	Ti=list(Ti)
+	Ti.append(Ti[-1])
+	Ti=pd.DataFrame(Ti)
+	Ti=Ti.values.reshape(xi.size,yi.size).T
+
+
+xs,ys=xs.unique(),ys.unique()
+if(Ts.size==xs.size*ys.size):
+	Ts=Ts.values.reshape(xs.size,ys.size).T
+
+else:
+	Ts=list(Ts)
+	Ts.append(Ts[-1])
+	Ts=pd.DataFrame(Ts)
+	Ts=Ts.values.reshape(xs.size,ys.size).T
+
+Inp=input("Enter i for initial condotion \n or \n s for solution \n")
+
+
+levels=np.linspace(20,100,101)
+if(Inp=='i'):
+	contf=plt.contourf(xi,yi,Ti, levels=levels)
+	cbar=plt.colorbar(contf)
+	cbar.set_label(r'Temperature [$^{o}C$]')
+	plt.show()
+
+elif(Inp=='s'):
+	contf=plt.contourf(xs,ys,Ts, levels=levels)
+	cbar=plt.colorbar(contf)
+	cbar.set_label(r'Temperature [$^{o}C$]')
+	plt.show()
+
